@@ -1,10 +1,10 @@
-// Navbar — top navigation bar with links and theme toggle
 import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
-import { Sun, Moon, Zap, Menu, X } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
+import { Sun, Moon, Zap, Menu, X, LogOut } from "lucide-react";
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-// Navigation links config
 const navLinks = [
   { to: "/", label: "Home" },
   { to: "/swipe", label: "Discover" },
@@ -14,104 +14,242 @@ const navLinks = [
 
 export default function Navbar() {
   const { isDark, toggleTheme } = useTheme();
+  const { user, logout, isAuthenticated } = useAuth();
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const isActive = (path) => location.pathname === path;
 
   return (
-    <nav className="navbar sticky top-0 z-50 bg-base-100/80 backdrop-blur-md border-b border-base-300 px-4 lg:px-8">
-      {/* Brand */}
-      <div className="navbar-start">
-        <Link to="/" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-            <Zap size={16} className="text-white fill-white" />
+    <>
+      {/* BACKDROP NAVBAR */}
+      <motion.nav
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        className="
+          fixed top-0 left-0 w-full z-50
+          backdrop-blur-xl
+          bg-base-100/60
+          border-b border-white/10
+        "
+      >
+        <div className="navbar px-4 lg:px-8 max-w-7xl mx-auto">
+
+          {/* BRAND */}
+          <div className="navbar-start">
+            <Link to="/" className="flex items-center gap-2 group">
+              <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center shadow-glow group-hover:scale-110 transition">
+                <Zap size={16} className="text-white" />
+              </div>
+
+              <span className="font-display font-bold text-gradient text-lg hidden sm:block">
+                SkillSwap
+              </span>
+            </Link>
           </div>
-          <span className="font-display font-bold text-lg text-gradient hidden sm:block">
-            SkillSwap
-          </span>
-        </Link>
-      </div>
 
-      {/* Desktop Links */}
-      <div className="navbar-center hidden lg:flex">
-        <ul className="flex items-center gap-1">
-          {navLinks.map(({ to, label }) => (
-            <li key={to}>
-              <Link
-                to={to}
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
-                  isActive(to)
-                    ? "bg-primary text-primary-content shadow-sm"
-                    : "text-base-content/70 hover:text-base-content hover:bg-base-200"
-                }`}
-              >
-                {label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
+          {/* DESKTOP NAV */}
+          <div className="navbar-center hidden lg:flex relative">
+            <div className="flex gap-1 relative">
 
-      {/* Right side controls */}
-      <div className="navbar-end gap-2">
-        {/* Theme Toggle */}
-        <button
-          onClick={toggleTheme}
-          className="btn btn-ghost btn-circle btn-sm"
-          aria-label="Toggle theme"
-        >
-          {isDark ? <Sun size={18} className="text-accent" /> : <Moon size={18} />}
-        </button>
-
-        {/* Avatar */}
-        <div className="dropdown dropdown-end">
-          <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
-            <div className="w-9 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-              <img
-                src="https://api.dicebear.com/7.x/avataaars/svg?seed=Alex&backgroundColor=b6e3f4"
-                alt="Profile"
-              />
-            </div>
-          </label>
-          <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow-lg bg-base-100 rounded-2xl w-44 border border-base-300">
-            <li><Link to="/profile" className="rounded-xl">Profile</Link></li>
-            <li><Link to="/swipe" className="rounded-xl">Find Matches</Link></li>
-            <li><Link to="/chat" className="rounded-xl">Messages</Link></li>
-          </ul>
-        </div>
-
-        {/* Mobile menu button */}
-        <button
-          className="btn btn-ghost btn-circle lg:hidden"
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
-          {menuOpen ? <X size={20} /> : <Menu size={20} />}
-        </button>
-      </div>
-
-      {/* Mobile menu */}
-      {menuOpen && (
-        <div className="absolute top-full left-0 right-0 bg-base-100 border-b border-base-300 shadow-lg lg:hidden">
-          <ul className="flex flex-col p-4 gap-1">
-            {navLinks.map(({ to, label }) => (
-              <li key={to}>
+              {navLinks.map(({ to, label }) => (
                 <Link
+                  key={to}
                   to={to}
-                  onClick={() => setMenuOpen(false)}
-                  className={`block px-4 py-3 rounded-xl text-sm font-medium transition-all ${
-                    isActive(to)
-                      ? "bg-primary text-primary-content"
-                      : "text-base-content/70 hover:bg-base-200"
-                  }`}
+                  className={`
+                    relative px-4 py-2 rounded-xl text-sm font-medium transition
+                    ${isActive(to)
+                      ? "text-primary"
+                      : "text-base-content/70 hover:text-base-content"
+                    }
+                  `}
                 >
                   {label}
+
+                  {/* ACTIVE UNDERLINE */}
+                  {isActive(to) && (
+                    <motion.div
+                      layoutId="activeTab"
+                      className="absolute left-2 right-2 -bottom-1 h-[2px] bg-primary rounded-full"
+                    />
+                  )}
                 </Link>
-              </li>
-            ))}
-          </ul>
+              ))}
+
+            </div>
+          </div>
+
+          {/* RIGHT ACTIONS */}
+          <div className="navbar-end gap-2">
+
+            {/* THEME TOGGLE */}
+            <button
+              onClick={toggleTheme}
+              className="btn btn-ghost btn-circle"
+            >
+              {isDark ? (
+                <Sun size={18} className="text-accent" />
+              ) : (
+                <Moon size={18} />
+              )}
+            </button>
+
+            {/* AUTH */}
+            {isAuthenticated && user ? (
+              <div className="dropdown dropdown-end">
+
+                {/* AVATAR */}
+                <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
+                  <div className="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                    <img src={user.avatar} alt="user" />
+                  </div>
+                </label>
+
+                {/* DROPDOWN */}
+                <AnimatePresence>
+                  <ul
+                    tabIndex={0}
+                    className="
+                      menu menu-sm dropdown-content mt-3 p-3
+                      bg-base-100/90 backdrop-blur-xl
+                      border border-white/10
+                      shadow-xl rounded-2xl w-48
+                    "
+                  >
+                    <motion.li
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                    >
+                      <Link to="/profile" className="rounded-xl">
+                        Profile
+                      </Link>
+                    </motion.li>
+
+                    <li>
+                      <Link to="/swipe" className="rounded-xl">
+                        Discover
+                      </Link>
+                    </li>
+
+                    <li>
+                      <Link to="/chat" className="rounded-xl">
+                        Messages
+                      </Link>
+                    </li>
+
+                    <li>
+                      <button
+                        onClick={logout}
+                        className="text-error rounded-xl flex gap-2 items-center"
+                      >
+                        <LogOut size={16} />
+                        Sign Out
+                      </button>
+                    </li>
+                  </ul>
+                </AnimatePresence>
+              </div>
+            ) : (
+              <Link
+                to="/login"
+                className="btn btn-primary btn-sm text-white rounded-lg"
+              >
+                Sign In
+              </Link>
+            )}
+
+            {/* MOBILE BUTTON */}
+            <button
+              className="btn btn-ghost btn-circle lg:hidden"
+              onClick={() => setMenuOpen(true)}
+            >
+              <Menu size={20} />
+            </button>
+
+          </div>
         </div>
-      )}
-    </nav>
+      </motion.nav>
+
+      {/* ─────────────────────────────────────
+          MOBILE SLIDE MENU
+      ───────────────────────────────────── */}
+      <AnimatePresence>
+        {menuOpen && (
+          <>
+            {/* BACKDROP */}
+            <motion.div
+              onClick={() => setMenuOpen(false)}
+              className="fixed inset-0 bg-black/40 z-40"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
+
+            {/* PANEL */}
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "tween" }}
+              className="
+                fixed right-0 top-0 h-full w-72 z-50
+                bg-base-100/90 backdrop-blur-xl
+                border-l border-white/10
+                p-6
+              "
+            >
+              {/* CLOSE */}
+              <button
+                onClick={() => setMenuOpen(false)}
+                className="btn btn-ghost btn-circle mb-6"
+              >
+                <X />
+              </button>
+
+              {/* LINKS */}
+              <div className="flex flex-col gap-3">
+
+                {navLinks.map(({ to, label }) => (
+                  <Link
+                    key={to}
+                    to={to}
+                    onClick={() => setMenuOpen(false)}
+                    className={`
+                      px-4 py-3 rounded-xl text-sm
+                      ${isActive(to)
+                        ? "bg-primary text-white"
+                        : "hover:bg-base-200"
+                      }
+                    `}
+                  >
+                    {label}
+                  </Link>
+                ))}
+
+                {!isAuthenticated && (
+                  <Link
+                    to="/login"
+                    className="btn btn-primary text-white mt-4"
+                  >
+                    Sign In
+                  </Link>
+                )}
+
+                {isAuthenticated && (
+                  <button
+                    onClick={logout}
+                    className="btn btn-error mt-4 text-white"
+                  >
+                    <LogOut size={16} />
+                    Sign Out
+                  </button>
+                )}
+
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
