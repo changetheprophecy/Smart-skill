@@ -80,7 +80,7 @@ export default function HomePage() {
           >
             <Link
               to="/swipe"
-              className="btn btn-primary btn-lg rounded-2xl px-10 border-0 shadow-glow hover:scale-105 transition-all text-white"
+              className="btn btn-vibrant-primary btn-lg rounded-2xl px-10 hover:scale-105 transition-all"
             >
               Start Swiping
               <ArrowRight size={20} />
@@ -222,7 +222,7 @@ export default function HomePage() {
 
                   <Link
                     to="/swipe"
-                    className="btn btn-primary w-full rounded-2xl mt-6 text-white"
+                    className="btn btn-vibrant-primary w-full rounded-2xl mt-6 font-semibold"
                   >
                     Connect
                     <Zap size={18} />

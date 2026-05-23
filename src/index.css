@@ -48,6 +48,62 @@
     filter: brightness(1.1);
     transform: translateY(-2px);
   }
+
+  /* ──── VIBRANT BUTTONS FOR LIGHT MODE ──── */
+  .btn-vibrant-primary {
+    @apply bg-blue-500 hover:bg-blue-600 text-white shadow-md hover:shadow-lg border-0 font-semibold transition-all;
+  }
+
+  .btn-vibrant-success {
+    @apply bg-green-500 hover:bg-green-600 text-white shadow-md hover:shadow-lg border-0 font-semibold transition-all;
+  }
+
+  .btn-vibrant-error {
+    @apply bg-red-500 hover:bg-red-600 text-white shadow-md hover:shadow-lg border-0 font-semibold transition-all;
+  }
+
+  .btn-vibrant-warning {
+    @apply bg-amber-500 hover:bg-amber-600 text-white shadow-md hover:shadow-lg border-0 font-semibold transition-all;
+  }
+
+  .btn-vibrant-info {
+    @apply bg-cyan-500 hover:bg-cyan-600 text-white shadow-md hover:shadow-lg border-0 font-semibold transition-all;
+  }
+
+  .btn-vibrant-purple {
+    @apply bg-purple-500 hover:bg-purple-600 text-white shadow-md hover:shadow-lg border-0 font-semibold transition-all;
+  }
+
+  .btn-vibrant-pink {
+    @apply bg-pink-500 hover:bg-pink-600 text-white shadow-md hover:shadow-lg border-0 font-semibold transition-all;
+  }
+
+  /* Secondary vibrant buttons */
+  .btn-outline-vibrant {
+    @apply border-2 font-semibold transition-all hover:shadow-md;
+  }
+
+  .btn-outline-blue {
+    @apply btn-outline-vibrant border-blue-500 text-blue-600 hover:bg-blue-50;
+  }
+
+  .btn-outline-green {
+    @apply btn-outline-vibrant border-green-500 text-green-600 hover:bg-green-50;
+  }
+
+  .btn-outline-red {
+    @apply btn-outline-vibrant border-red-500 text-red-600 hover:bg-red-50;
+  }
+
+  .btn-outline-purple {
+    @apply btn-outline-vibrant border-purple-500 text-purple-600 hover:bg-purple-50;
+  }
+
+  /* Icon buttons enhanced */
+  .btn-icon-vibrant {
+    @apply btn btn-circle shadow-md hover:shadow-lg transition-all font-semibold;
+  }
+
 }
 
 /* UTILITIES */

@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import { useAuth } from "../context/AuthContext";
-import { Sun, Moon, Zap, Menu, X, LogOut } from "lucide-react";
+import { Sun, Moon, Zap, Menu, X, LogOut, User } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -11,6 +11,65 @@ const navLinks = [
   { to: "/chat", label: "Messages" },
   { to: "/profile", label: "Profile" },
 ];
+
+// Get user initials for avatar
+function getUserInitials(user) {
+  if (!user) return "?";
+
+  // Try to get name from displayName or email
+  const name = user.displayName || user.email || "";
+
+  if (!name) return "?";
+
+  const parts = name.split(" ");
+  if (parts.length >= 2) {
+    return (parts[0][0] + parts[1][0]).toUpperCase();
+  }
+
+  return name.substring(0, 2).toUpperCase();
+}
+
+// Generate a color based on the user's email
+function getAvatarColor(user) {
+  if (!user?.email) return "bg-primary";
+
+  const colors = [
+    "bg-blue-500",
+    "bg-purple-500",
+    "bg-pink-500",
+    "bg-red-500",
+    "bg-orange-500",
+    "bg-yellow-500",
+    "bg-green-500",
+    "bg-teal-500",
+    "bg-cyan-500",
+    "bg-indigo-500",
+  ];
+
+  const hash = user.email.charCodeAt(0) + user.email.charCodeAt(user.email.length - 1);
+  return colors[hash % colors.length];
+}
+
+// Avatar Component
+function Avatar({ user, size = "md" }) {
+  const sizeClasses = {
+    sm: "w-8 h-8",
+    md: "w-10 h-10",
+    lg: "w-12 h-12",
+  };
+
+  const bgColor = getAvatarColor(user);
+  const initials = getUserInitials(user);
+
+  return (
+    <div
+      className={`${sizeClasses[size]} rounded-full ring-2 ring-primary ring-offset-2 ring-offset-base-100 flex items-center justify-center font-bold text-white ${bgColor}`}
+      title={user?.email}
+    >
+      {initials}
+    </div>
+  );
+}
 
 export default function Navbar() {
   const { isDark, toggleTheme } = useTheme();
@@ -80,89 +139,142 @@ export default function Navbar() {
           {/* RIGHT ACTIONS */}
           <div className="navbar-end gap-2">
             {/* THEME TOGGLE */}
-            <button
+            <motion.button
               type="button"
               onClick={toggleTheme}
               className="btn btn-ghost btn-circle"
               aria-label="Toggle theme"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
             >
               {isDark ? (
                 <Sun size={18} className="text-accent" />
               ) : (
                 <Moon size={18} />
               )}
-            </button>
+            </motion.button>
 
             {/* AUTH */}
             {isAuthenticated && user ? (
               <div className="dropdown dropdown-end">
-                {/* AVATAR */}
-                <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
-                  <div className="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                    <img src={user.avatar} alt="user" />
-                  </div>
-                </label>
+                {/* AVATAR BUTTON */}
+                <motion.button
+                  tabIndex={0}
+                  className="btn btn-ghost btn-circle hover:bg-base-200 transition"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Avatar user={user} size="md" />
+                </motion.button>
 
-                {/* DROPDOWN */}
+                {/* DROPDOWN MENU */}
                 <AnimatePresence>
-                  <ul
+                  <motion.ul
                     tabIndex={0}
                     className="
-                      menu menu-sm dropdown-content mt-3 p-3
-                      bg-base-100/90 backdrop-blur-xl
-                      border border-white/10
-                      shadow-xl rounded-2xl w-48
+                      menu menu-sm dropdown-content mt-3 p-2
+                      bg-base-100/95 backdrop-blur-xl
+                      border border-base-300
+                      shadow-xl rounded-2xl w-56
                     "
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
                   >
+                    {/* USER INFO */}
+                    <li className="menu-title px-3 py-2">
+                      <div className="flex items-center gap-3">
+                        <Avatar user={user} size="sm" />
+                        <div className="min-w-0">
+                          <p className="font-semibold text-sm truncate">
+                            {user.displayName || user.email?.split("@")[0] || "User"}
+                          </p>
+                          <p className="text-xs text-base-content/60 truncate">
+                            {user.email}
+                          </p>
+                        </div>
+                      </div>
+                    </li>
+
+                    <li>
+                      <div className="divider my-1"></div>
+                    </li>
+
                     <motion.li
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.05 }}
                     >
-                      <Link to="/profile" className="rounded-xl">
+                      <Link to="/profile" className="rounded-xl hover:bg-primary/20">
+                        <User size={16} />
                         Profile
                       </Link>
                     </motion.li>
 
-                    <li>
-                      <Link to="/swipe" className="rounded-xl">
+                    <motion.li
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.1 }}
+                    >
+                      <Link to="/swipe" className="rounded-xl hover:bg-primary/20">
                         Discover
                       </Link>
-                    </li>
+                    </motion.li>
 
-                    <li>
-                      <Link to="/chat" className="rounded-xl">
+                    <motion.li
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.15 }}
+                    >
+                      <Link to="/chat" className="rounded-xl hover:bg-primary/20">
                         Messages
                       </Link>
-                    </li>
+                    </motion.li>
 
                     <li>
+                      <div className="divider my-1"></div>
+                    </li>
+
+                    <motion.li
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.2 }}
+                    >
                       <button
                         onClick={logout}
-                        className="text-error rounded-xl flex gap-2 items-center"
+                        className="text-error rounded-xl hover:bg-error/20"
                       >
                         <LogOut size={16} />
                         Sign Out
                       </button>
-                    </li>
-                  </ul>
+                    </motion.li>
+                  </motion.ul>
                 </AnimatePresence>
               </div>
             ) : (
-              <Link
-                to="/login"
-                className="btn btn-primary btn-sm text-white rounded-lg"
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.2 }}
               >
-                Sign In
-              </Link>
+                <Link
+                  to="/login"
+                  className="btn btn-vibrant-primary btn-sm text-white font-semibold rounded-lg"
+                >
+                  Sign In
+                </Link>
+              </motion.div>
             )}
 
-            {/* MOBILE BUTTON */}
-            <button
-              className="btn btn-ghost btn-circle lg:hidden"
+            {/* MOBILE MENU BUTTON */}
+            <motion.button
+              className="btn btn-icon-vibrant btn-circle bg-blue-500 hover:bg-blue-600 text-white lg:hidden"
               onClick={() => setMenuOpen(true)}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
             >
               <Menu size={20} />
-            </button>
+            </motion.button>
           </div>
         </div>
       </motion.nav>
@@ -196,47 +308,85 @@ export default function Navbar() {
               "
             >
               {/* CLOSE */}
-              <button
+              <motion.button
                 onClick={() => setMenuOpen(false)}
-                className="btn btn-ghost btn-circle mb-6"
+                className="btn btn-icon-vibrant btn-circle bg-red-500 hover:bg-red-600 text-white mb-6"
+                whileTap={{ scale: 0.9 }}
               >
                 <X />
-              </button>
+              </motion.button>
+
+              {/* USER INFO - MOBILE */}
+              {isAuthenticated && user && (
+                <div className="flex items-center gap-3 mb-6 pb-6 border-b border-base-300">
+                  <Avatar user={user} size="lg" />
+                  <div className="min-w-0">
+                    <p className="font-semibold text-sm truncate">
+                      {user.displayName || user.email?.split("@")[0] || "User"}
+                    </p>
+                    <p className="text-xs text-base-content/60 truncate">
+                      {user.email}
+                    </p>
+                  </div>
+                </div>
+              )}
 
               {/* LINKS */}
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-2">
                 {navLinks.map(({ to, label }) => (
-                  <Link
+                  <motion.div
                     key={to}
-                    to={to}
-                    onClick={() => setMenuOpen(false)}
-                    className={`
-                      px-4 py-3 rounded-xl text-sm
-                      ${
-                        isActive(to)
-                          ? "bg-primary text-white"
-                          : "hover:bg-base-200"
-                      }
-                    `}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
                   >
-                    {label}
-                  </Link>
+                    <Link
+                      to={to}
+                      onClick={() => setMenuOpen(false)}
+                      className={`
+                        block px-4 py-3 rounded-xl text-sm font-medium transition
+                        ${
+                          isActive(to)
+                            ? "bg-primary text-white shadow-lg"
+                            : "text-base-content hover:bg-base-200"
+                        }
+                      `}
+                    >
+                      {label}
+                    </Link>
+                  </motion.div>
                 ))}
 
                 {!isAuthenticated && (
-                  <Link to="/login" className="btn btn-primary text-white mt-4">
-                    Sign In
-                  </Link>
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                  >
+                    <Link
+                      to="/login"
+                      className="btn btn-vibrant-primary w-full text-white font-semibold mt-4"
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      Sign In
+                    </Link>
+                  </motion.div>
                 )}
 
                 {isAuthenticated && (
-                  <button
-                    onClick={logout}
-                    className="btn btn-error mt-4 text-white"
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
                   >
-                    <LogOut size={16} />
-                    Sign Out
-                  </button>
+                    <button
+                      onClick={() => {
+                        logout();
+                        setMenuOpen(false);
+                      }}
+                      className="btn btn-vibrant-error w-full text-white font-semibold mt-4"
+                    >
+                      <LogOut size={16} />
+                      Sign Out
+                    </button>
+                  </motion.div>
                 )}
               </div>
             </motion.div>

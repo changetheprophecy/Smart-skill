@@ -143,7 +143,7 @@ export default function ChatPage() {
             <div className="flex items-center gap-3 p-4 border-b border-base-300 bg-base-100/80 backdrop-blur-sm">
               {/* Back button (mobile only) */}
               <button
-                className="btn btn-ghost btn-circle btn-sm lg:hidden"
+                className="btn btn-icon-vibrant btn-sm bg-slate-400 hover:bg-slate-500 text-white lg:hidden"
                 onClick={() => setShowSidebar(true)}
               >
                 <ArrowLeft size={18} />
@@ -224,7 +224,7 @@ export default function ChatPage() {
                   whileTap={{ scale: 0.95 }}
                   onClick={handleSend}
                   disabled={!messageInput.trim()}
-                  className="btn btn-primary btn-circle shadow-lg shadow-primary/20 disabled:opacity-40"
+                  className="btn btn-vibrant-primary btn-circle font-semibold disabled:opacity-40"
                 >
                   <Send size={18} />
                 </motion.button>

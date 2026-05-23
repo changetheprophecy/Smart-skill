@@ -88,7 +88,7 @@ export default function SwipePage() {
                         setHistory([]);
                         setMatches([]);
                       }}
-                      className="btn btn-gradient rounded-2xl"
+                      className="btn btn-vibrant-primary rounded-2xl font-semibold"
                     >
                       <RotateCcw size={16} />
                       Restart
@@ -127,7 +127,7 @@ export default function SwipePage() {
             <div className="flex items-center gap-4 mt-8">
               <button
                 onClick={() => handleSwipe("skip")}
-                className="btn btn-error text-white gap-2"
+                className="btn btn-vibrant-error gap-2 font-semibold"
               >
                 <X size={16} />
                 Reject
@@ -135,14 +135,14 @@ export default function SwipePage() {
 
               <button
                 onClick={handleUndo}
-                className="btn btn-circle w-14 h-14 glass"
+                className="btn btn-icon-vibrant bg-slate-400 hover:bg-slate-500 text-white"
               >
                 <RotateCcw size={18} />
               </button>
 
               <button
                 onClick={() => handleSwipe("like")}
-                className="btn btn-success text-white gap-2"
+                className="btn btn-vibrant-success gap-2 font-semibold"
               >
                 <Heart size={16} />
                 Accept
