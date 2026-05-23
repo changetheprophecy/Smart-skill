@@ -1,0 +1,115 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* BASE */
+@layer base {
+  html {
+    font-family: 'DM Sans', sans-serif;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-base-100 text-base-content;
+  }
+
+  h1,h2,h3 {
+    font-family: 'Playfair Display', serif;
+  }
+
+  ::selection {
+    background: #7c5cff;
+    color: white;
+  }
+}
+
+/* COMPONENTS */
+@layer components {
+
+  .glass {
+    @apply backdrop-blur-xl border border-white/10;
+    background: rgba(255,255,255,0.06);
+  }
+
+  .card-soft {
+    @apply rounded-3xl glass shadow-lg;
+  }
+
+  .btn-gradient {
+    background: linear-gradient(135deg, #7c5cff, #ff6b6b);
+    color: white;
+    border: none;
+  }
+
+  .btn-gradient:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+  }
+}
+
+/* UTILITIES */
+@layer utilities {
+
+  .text-gradient {
+    background: linear-gradient(135deg,#7c5cff,#ff6b6b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* FIX INPUTS (IMPORTANT FOR YOUR TEXT BOX ISSUE) */
+  input,
+  textarea {
+    @apply text-base-content;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: rgba(255,255,255,0.4);
+  }
+
+  input:focus,
+  textarea:focus {
+    outline: none;
+  }
+
+  /* SWIPE CARD */
+  .swipe-card {
+    touch-action: none;
+    user-select: none;
+    cursor: grab;
+  }
+
+  .swipe-card:active {
+    cursor: grabbing;
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #7c5cff55;
+    border-radius: 999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #7c5cffaa;
+  }
+}
+
+/* CHAT BUBBLES */
+.chat-bubble-sent {
+  background: linear-gradient(135deg,#7c5cff,#ff6b6b);
+  color: white;
+  border-radius: 18px 18px 4px 18px;
+}
+
+.chat-bubble-received {
+  background: rgba(255,255,255,0.06);
+  border-radius: 18px 18px 18px 4px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
