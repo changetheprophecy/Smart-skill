@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Heart, X, RotateCcw, Zap } from "lucide-react";
+import { RotateCcw, Zap, X, Heart } from "lucide-react";
 import { swipeUsers } from "../data/mockData";
 import SwipeCard from "../components/SwipeCard";
 
@@ -43,13 +43,11 @@ export default function SwipePage() {
 
   return (
     <div className="min-h-screen bg-base-100 text-base-content relative overflow-hidden px-4 py-10">
-
       {/* background glow */}
       <div className="absolute top-0 left-1/3 w-[500px] h-[500px] bg-primary/20 blur-3xl rounded-full" />
       <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-secondary/20 blur-3xl rounded-full" />
 
       <div className="max-w-7xl mx-auto relative z-10">
-
         {/* HEADER */}
         <div className="text-center mb-12">
           <h1 className="text-5xl font-bold">
@@ -66,14 +64,10 @@ export default function SwipePage() {
         </div>
 
         <div className="flex flex-col lg:flex-row gap-10 justify-center">
-
           {/* SWIPE AREA */}
           <div className="w-full max-w-md flex flex-col items-center">
-
             <div className="relative w-full h-[620px]">
-
               <AnimatePresence>
-
                 {users.length === 0 ? (
                   <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
@@ -126,18 +120,17 @@ export default function SwipePage() {
                       );
                     })
                 )}
-
               </AnimatePresence>
             </div>
 
             {/* ACTIONS */}
-            <div className="flex items-center gap-6 mt-8">
-
+            <div className="flex items-center gap-4 mt-8">
               <button
                 onClick={() => handleSwipe("skip")}
-                className="btn btn-circle w-16 h-16 border border-error text-error hover:bg-error hover:text-white"
+                className="btn btn-error text-white gap-2"
               >
-                <X size={26} />
+                <X size={16} />
+                Reject
               </button>
 
               <button
@@ -149,19 +142,17 @@ export default function SwipePage() {
 
               <button
                 onClick={() => handleSwipe("like")}
-                className="btn btn-circle w-16 h-16 border border-success text-success hover:bg-success hover:text-white"
+                className="btn btn-success text-white gap-2"
               >
-                <Heart size={26} />
+                <Heart size={16} />
+                Accept
               </button>
-
             </div>
           </div>
 
           {/* MATCHES */}
           <div className="w-full max-w-sm">
-
             <div className="glass rounded-[32px] p-6">
-
               <div className="flex items-center gap-3 mb-6">
                 <Zap className="text-primary" />
                 <h3 className="font-bold text-lg">Matches</h3>
@@ -171,12 +162,9 @@ export default function SwipePage() {
               </div>
 
               {matches.length === 0 ? (
-                <p className="text-base-content/40 text-sm">
-                  No matches yet
-                </p>
+                <p className="text-base-content/40 text-sm">No matches yet</p>
               ) : (
                 <div className="space-y-3 max-h-[500px] overflow-auto pr-2">
-
                   {matches.map((m) => (
                     <div
                       key={m.id}
@@ -188,9 +176,7 @@ export default function SwipePage() {
                       />
 
                       <div className="min-w-0">
-                        <p className="font-semibold truncate">
-                          {m.name}
-                        </p>
+                        <p className="font-semibold truncate">{m.name}</p>
 
                         <p className="text-xs text-base-content/50 truncate">
                           {m.location || "Location not set"}
@@ -202,12 +188,10 @@ export default function SwipePage() {
                       </span>
                     </div>
                   ))}
-
                 </div>
               )}
             </div>
           </div>
-
         </div>
       </div>
 
@@ -228,7 +212,6 @@ export default function SwipePage() {
           </motion.div>
         )}
       </AnimatePresence>
-
     </div>
   );
 }

@@ -19,20 +19,31 @@ const getSavedTheme = () => {
   return null;
 };
 
+/* Get initial theme from DOM or localStorage */
+const getInitialTheme = () => {
+  // Check DOM first (set by index.html script)
+  const domTheme = document.documentElement.getAttribute("data-theme");
+  if (domTheme === "dark") return true;
+  if (domTheme === "light") return false;
+
+  // Fall back to localStorage
+  const saved = getSavedTheme();
+  if (saved !== null) return saved;
+
+  // Fall back to system preference
+  return getSystemTheme();
+};
+
 /* ---------------- PROVIDER ---------------- */
 
 export function ThemeProvider({ children }) {
   // true = dark, false = light
-  const [isDark, setIsDark] = useState(() => {
-    const saved = getSavedTheme();
-    return saved !== null ? saved : getSystemTheme();
-  });
+  // Initialize from DOM (index.html sets this before React loads)
+  const [isDark, setIsDark] = useState(() => getInitialTheme());
 
   // apply theme to DOM (DaisyUI uses this)
   useEffect(() => {
-    const themeName = isDark ? "skilldark" : "skilllight";
-    console.log("Applying theme:", themeName);
-
+    const themeName = isDark ? "dark" : "light";
     document.documentElement.setAttribute("data-theme", themeName);
     localStorage.setItem(THEME_KEY, isDark ? "dark" : "light");
   }, [isDark]);
@@ -53,11 +64,7 @@ export function ThemeProvider({ children }) {
   /* ---------------- ACTIONS ---------------- */
 
   const toggleTheme = () => {
-    console.log("Toggle theme called, current isDark:", isDark);
-    setIsDark((prev) => {
-      console.log("Setting isDark to:", !prev);
-      return !prev;
-    });
+    setIsDark((prev) => !prev);
   };
 
   const setTheme = (mode) => {

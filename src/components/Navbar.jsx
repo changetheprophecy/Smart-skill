@@ -34,7 +34,6 @@ export default function Navbar() {
         "
       >
         <div className="navbar px-4 lg:px-8 max-w-7xl mx-auto">
-
           {/* BRAND */}
           <div className="navbar-start">
             <Link to="/" className="flex items-center gap-2 group">
@@ -51,16 +50,16 @@ export default function Navbar() {
           {/* DESKTOP NAV */}
           <div className="navbar-center hidden lg:flex relative">
             <div className="flex gap-1 relative">
-
               {navLinks.map(({ to, label }) => (
                 <Link
                   key={to}
                   to={to}
                   className={`
                     relative px-4 py-2 rounded-xl text-sm font-medium transition
-                    ${isActive(to)
-                      ? "text-primary"
-                      : "text-base-content/70 hover:text-base-content"
+                    ${
+                      isActive(to)
+                        ? "text-primary"
+                        : "text-base-content/70 hover:text-base-content"
                     }
                   `}
                 >
@@ -75,17 +74,17 @@ export default function Navbar() {
                   )}
                 </Link>
               ))}
-
             </div>
           </div>
 
           {/* RIGHT ACTIONS */}
           <div className="navbar-end gap-2">
-
             {/* THEME TOGGLE */}
             <button
+              type="button"
               onClick={toggleTheme}
               className="btn btn-ghost btn-circle"
+              aria-label="Toggle theme"
             >
               {isDark ? (
                 <Sun size={18} className="text-accent" />
@@ -97,7 +96,6 @@ export default function Navbar() {
             {/* AUTH */}
             {isAuthenticated && user ? (
               <div className="dropdown dropdown-end">
-
                 {/* AVATAR */}
                 <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                   <div className="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
@@ -165,7 +163,6 @@ export default function Navbar() {
             >
               <Menu size={20} />
             </button>
-
           </div>
         </div>
       </motion.nav>
@@ -208,7 +205,6 @@ export default function Navbar() {
 
               {/* LINKS */}
               <div className="flex flex-col gap-3">
-
                 {navLinks.map(({ to, label }) => (
                   <Link
                     key={to}
@@ -216,9 +212,10 @@ export default function Navbar() {
                     onClick={() => setMenuOpen(false)}
                     className={`
                       px-4 py-3 rounded-xl text-sm
-                      ${isActive(to)
-                        ? "bg-primary text-white"
-                        : "hover:bg-base-200"
+                      ${
+                        isActive(to)
+                          ? "bg-primary text-white"
+                          : "hover:bg-base-200"
                       }
                     `}
                   >
@@ -227,10 +224,7 @@ export default function Navbar() {
                 ))}
 
                 {!isAuthenticated && (
-                  <Link
-                    to="/login"
-                    className="btn btn-primary text-white mt-4"
-                  >
+                  <Link to="/login" className="btn btn-primary text-white mt-4">
                     Sign In
                   </Link>
                 )}
@@ -244,7 +238,6 @@ export default function Navbar() {
                     Sign Out
                   </button>
                 )}
-
               </div>
             </motion.div>
           </>
